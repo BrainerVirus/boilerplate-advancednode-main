@@ -36,7 +36,7 @@ myDB(async (client) => {
 
   // Be sure to change the title
   app.route("/").get((req, res) => {
-    res.render(path.join(__dirname, "/views/pug/index.pug"), {
+    res.render(path.join(process.cwd(), "/views/pug/index.pug"), {
       title: "Connected to Database",
       message: "Please login",
     });
@@ -57,7 +57,7 @@ myDB(async (client) => {
   // Be sure to add this...
 }).catch((e) => {
   app.route("/").get((req, res) => {
-    res.render(path.join(__dirname, "/views/pug/index.pug"), {
+    res.render(path.join(process.cwd(), "/views/pug/index.pug"), {
       title: e,
       message: "Unable to login",
     });
