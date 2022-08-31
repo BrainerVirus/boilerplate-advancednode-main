@@ -36,7 +36,7 @@ myDB(async (client) => {
 
   // Be sure to change the title
   app.route("/").get((req, res) => {
-    // Change the response to render the Pug template
+    //Change the response to render the Pug template
     res.render("pug", {
       title: "Connected to Database",
       message: "Please login",
@@ -44,14 +44,17 @@ myDB(async (client) => {
   });
 
   // Serialization and deserialization here...
+
   passport.serializeUser((user, done) => {
-    done(null, user._id);
+    done(null, null, user._id);
   });
+
   passport.deserializeUser((id, done) => {
-    myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+    db.findOne({ _id: new ObjectID(id) }, (err, doc) => {
       done(null, doc);
     });
   });
+
   // Be sure to add this...
 }).catch((e) => {
   app.route("/").get((req, res) => {
