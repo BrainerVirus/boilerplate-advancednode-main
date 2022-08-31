@@ -7,17 +7,16 @@ const session = require("express-session");
 const passport = require("passport");
 const routes = require("./routes");
 const auth = require("./auth.js");
-const path = require("node:path");
 
+const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 const passportSocketIo = require("passport.socketio");
 const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo")(session);
 const URI = process.env.MONGO_URI;
 const store = new MongoStore({ url: URI });
-
-const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+const path = require("node:path");
 
 app.set("view engine", "pug");
 
@@ -37,6 +36,9 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 io.use(
   passportSocketIo.authorize({
     cookieParser: cookieParser,
@@ -48,9 +50,6 @@ io.use(
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 myDB(async (client) => {
   const myDataBase = await client.db("database").collection("users");
 
@@ -61,7 +60,7 @@ myDB(async (client) => {
   io.on("connection", (socket) => {
     ++currentUsers;
     io.emit("user count", currentUsers);
-    console.log("A user has connected");
+    console.log("user " + socket.request.user.username + " connected");
 
     socket.on("disconnect", () => {
       console.log("A user has disconnected");
@@ -69,13 +68,9 @@ myDB(async (client) => {
       io.emit("user count", currentUsers);
     });
   });
-  // Be sure to add this...
 }).catch((e) => {
   app.route("/").get((req, res) => {
-    res.render(path.join(process.cwd(), "/views/pug/index.pug"), {
-      title: e,
-      message: "Unable to login",
-    });
+    res.render("pug", { title: e, message: "Unable to login" });
   });
 });
 
