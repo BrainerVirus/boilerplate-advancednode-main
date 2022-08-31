@@ -3,23 +3,18 @@ require("dotenv").config();
 const { MongoClient } = require("mongodb");
 
 async function main(callback) {
-  const URI = process.env.MONGO_URI; // Declare MONGO_URI in your .env file
-  const client = new MongoClient(URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
   try {
-    // Connect to the MongoDB cluster
-    await client.connect();
-
-    // Make the appropriate DB calls
-    await callback(client);
-    console.log("Connected to DB");
-  } catch (e) {
-    // Catch any errors
-    console.error(e);
-    throw new Error("Unable to Connect to Database");
+    await MongoClient.connect(process.env.MONGO_URI, (err, db) => {
+      if (err) {
+        console.log("Database error: " + err);
+      } else {
+        console.log("Successful database connection and db is: ", db);
+      }
+    });
+  } catch (error) {
+    console.log("Database error: " + error);
+  } finally {
+    MongoClient.close();
   }
 }
 
