@@ -9,15 +9,15 @@ const routes = require("./routes");
 const auth = require("./auth.js");
 const path = require("node:path");
 
-const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
-
 const passportSocketIo = require("passport.socketio");
 const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo")(session);
 const URI = process.env.MONGO_URI;
 const store = new MongoStore({ url: URI });
+
+const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 
 app.set("view engine", "pug");
 
@@ -68,8 +68,6 @@ myDB(async (client) => {
       --currentUsers;
       io.emit("user count", currentUsers);
     });
-
-    console.log("user " + socket.request.user.name + " connected");
   });
   // Be sure to add this...
 }).catch((e) => {
