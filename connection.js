@@ -8,7 +8,7 @@ async function main(callback) {
       if (err) {
         console.log("Database error: " + err);
       } else {
-        console.log("Successful database connection and db is: ", db);
+        console.log("Connected to Database");
       }
     });
   } catch (error) {
