@@ -1,7 +1,7 @@
 "use strict";
 require("dotenv").config();
 const express = require("express");
-const db = require("./connection");
+const myDB = require("./connection");
 const fccTesting = require("./freeCodeCamp/fcctesting.js");
 const path = require("node:path");
 const session = require("express-session");
@@ -31,7 +31,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-db(async (client) => {
+myDB(async (client) => {
   const myDataBase = await client.db("database").collection("users");
 
   // Be sure to change the title
