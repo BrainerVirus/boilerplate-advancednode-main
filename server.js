@@ -7,7 +7,7 @@ const path = require("node:path");
 const session = require("express-session");
 const passport = require("passport");
 const { MongoCR } = require("mongodb/lib/core");
-// const { MongoClient } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const ObjectID = require("mongodb").ObjectID;
 
 const app = express();
@@ -52,10 +52,10 @@ app.listen(PORT, () => {
   console.log("Listening on port " + PORT);
 });
 
-// MongoClient.connect(process.env.MONGO_URI, (err, db) => {
-//   if (err) {
-//     console.log("Database error: " + err);
-//   } else {
-//     console.log("Successful database connection and db is: ", db);
-//   }
-// });
+MongoClient.connect(process.env.MONGO_URI, (err, db) => {
+  if (err) {
+    console.log("Database error: " + err);
+  } else {
+    console.log("Successful database connection and db is: ", db);
+  }
+});
