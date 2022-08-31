@@ -7,6 +7,10 @@ $(document).ready(function () {
     console.log(data);
   });
 
+  socket.on("disconnect", () => {
+    console.log("A user has disconnected");
+  });
+
   // Form submittion with new message in field with id 'm'
   $("form").submit(function () {
     let messageToSend = $("#m").val();
